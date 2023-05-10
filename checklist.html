@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Disney Checklist</title>
+    <style>
+      /* apply a strike-through style to the label text when the checkbox is checked */
+      input[type="checkbox"]:checked + span {
+        text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Disney Checklist</h1>
+    <button onclick="addItem()">Add Item</button>
+    <ul id="checklist"></ul>
+
+    <script>
+      function addItem() {
+        // prompt the user for input
+        var newItem = prompt("Enter a new item:");
+
+        if (newItem === null || newItem.trim() === "") {
+          // do nothing if the user cancels or enters an empty string
+          return;
+        }
+
+        // create a new list item
+        var li = document.createElement("li");
+        // create a new checkbox
+        var checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        // create a new span element to wrap the text
+        var span = document.createElement("span");
+        // add the input value to the span element
+        span.appendChild(document.createTextNode(newItem));
+        // add the checkbox to the list item
+        li.appendChild(checkbox);
+        // add the span element to the list item
+        li.appendChild(span);
+        // add a remove button to the list item
+        var removeButton = document.createElement("button");
+        removeButton.innerHTML = "Remove";
+        removeButton.onclick = function () {
+          li.remove();
+          // remove the item from local storage
+          removeItemFromLocalStorage(newItem);
+        };
+        li.appendChild(removeButton);
+        // add the new list item to the checklist
+        document.getElementById("checklist").appendChild(li);
+        // store the item in local storage
+        var items = JSON.parse(localStorage.getItem("items")) || [];
+        items.push(newItem);
+        localStorage.setItem("items", JSON.stringify(items));
+      }
+
+      function removeItemFromLocalStorage(item) {
+        var items = JSON.parse(localStorage.getItem("items")) || [];
+        items = items.filter(function (i) {
+          return i !== item;
+        });
+        localStorage.setItem("items", JSON.stringify(items));
+      }
+
+      // load the items from local storage when the page is loaded
+      window.onload = function () {
+        var items = JSON.parse(localStorage.getItem("items")) || [];
+        items.forEach(function (item) {
+          // create a new list item
+          var li = document.createElement("li");
+          // create a new checkbox
+          var checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          // create a new span element to wrap the text
+          var span = document.createElement("span");
+          // add the input value to the span element
+          span.appendChild(document.createTextNode(item));
+          // add the checkbox to the list item
+          li.appendChild(checkbox);
+          // add the span element to the list item
+          li.appendChild(span);
+          // add a remove button to the list item
+          var removeButton = document.createElement("button");
+          removeButton.innerHTML = "Remove";
+          removeButton.onclick = function () {
+            li.remove();
+            // remove the item from local storage
+            removeItemFromLocalStorage(item);
+          };
+          li.appendChild(removeButton);
+          // add the new list item to the checklist
+          document.getElementById("checklist").appendChild(li);
+        });
+      };
+    </script>
+  </body>
+</html>
